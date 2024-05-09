@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package protobuf;
+
+option go_package = "src/proto";
+
+service Math {
+    rpc Max (stream Request) returns (stream Response) {}
+}
+
+message Request {
+    string string = 1;
+}
+
+message Response {
+    string string = 1;
+}
