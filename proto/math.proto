@@ -10,8 +10,10 @@ service Math {
 
 message Request {
     string string = 1;
+    string group = 2;
 }
 
 message Response {
     string string = 1;
+    string group = 2;
 }
