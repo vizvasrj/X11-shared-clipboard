@@ -21,17 +21,17 @@ import (
 )
 
 type server struct {
-	pb.UnimplementedMathServer
+	pb.UnimplementedClipboardServiceServer
 }
 
-func (s server) Max(srv pb.Math_MaxServer) error {
+func (s server) SendClipboard(srv pb.ClipboardService_SendClipboardServer) error {
 	isRecieved := false
 	mutex := &sync.Mutex{}
 	ch := clipboard.Watch(context.TODO(), clipboard.FmtText)
 	go func() {
 		for data := range ch {
 			if !isRecieved {
-				req := pb.Response{String_: string(data)}
+				req := pb.Response{Characters: string(data)}
 				if err := srv.Send(&req); err != nil {
 					log.Printf("can not send %v\n", err)
 					continue
@@ -68,7 +68,7 @@ func (s server) Max(srv pb.Math_MaxServer) error {
 		mutex.Lock()
 		isRecieved = true
 		mutex.Unlock()
-		err = cp.WriteAll(req.String_)
+		err = cp.WriteAll(req.Characters)
 		if err != nil {
 			fmt.Println("error in writing to clipboard", err)
 			continue
@@ -132,7 +132,7 @@ func main() {
 			}
 
 			s := grpc.NewServer(opts...)
-			pb.RegisterMathServer(s, &server{})
+			pb.RegisterClipboardServiceServer(s, &server{})
 
 			// and start...
 			if err := s.Serve(lis); err != nil {

@@ -18,45 +18,45 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// MathClient is the client API for Math service.
+// ClipboardServiceClient is the client API for ClipboardService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type MathClient interface {
-	Max(ctx context.Context, opts ...grpc.CallOption) (Math_MaxClient, error)
+type ClipboardServiceClient interface {
+	SendClipboard(ctx context.Context, opts ...grpc.CallOption) (ClipboardService_SendClipboardClient, error)
 }
 
-type mathClient struct {
+type clipboardServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewMathClient(cc grpc.ClientConnInterface) MathClient {
-	return &mathClient{cc}
+func NewClipboardServiceClient(cc grpc.ClientConnInterface) ClipboardServiceClient {
+	return &clipboardServiceClient{cc}
 }
 
-func (c *mathClient) Max(ctx context.Context, opts ...grpc.CallOption) (Math_MaxClient, error) {
-	stream, err := c.cc.NewStream(ctx, &Math_ServiceDesc.Streams[0], "/protobuf.Math/Max", opts...)
+func (c *clipboardServiceClient) SendClipboard(ctx context.Context, opts ...grpc.CallOption) (ClipboardService_SendClipboardClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ClipboardService_ServiceDesc.Streams[0], "/protobuf.ClipboardService/SendClipboard", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &mathMaxClient{stream}
+	x := &clipboardServiceSendClipboardClient{stream}
 	return x, nil
 }
 
-type Math_MaxClient interface {
+type ClipboardService_SendClipboardClient interface {
 	Send(*Request) error
 	Recv() (*Response, error)
 	grpc.ClientStream
 }
 
-type mathMaxClient struct {
+type clipboardServiceSendClipboardClient struct {
 	grpc.ClientStream
 }
 
-func (x *mathMaxClient) Send(m *Request) error {
+func (x *clipboardServiceSendClipboardClient) Send(m *Request) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *mathMaxClient) Recv() (*Response, error) {
+func (x *clipboardServiceSendClipboardClient) Recv() (*Response, error) {
 	m := new(Response)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -64,53 +64,53 @@ func (x *mathMaxClient) Recv() (*Response, error) {
 	return m, nil
 }
 
-// MathServer is the server API for Math service.
-// All implementations must embed UnimplementedMathServer
+// ClipboardServiceServer is the server API for ClipboardService service.
+// All implementations must embed UnimplementedClipboardServiceServer
 // for forward compatibility
-type MathServer interface {
-	Max(Math_MaxServer) error
-	mustEmbedUnimplementedMathServer()
+type ClipboardServiceServer interface {
+	SendClipboard(ClipboardService_SendClipboardServer) error
+	mustEmbedUnimplementedClipboardServiceServer()
 }
 
-// UnimplementedMathServer must be embedded to have forward compatible implementations.
-type UnimplementedMathServer struct {
+// UnimplementedClipboardServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedClipboardServiceServer struct {
 }
 
-func (UnimplementedMathServer) Max(Math_MaxServer) error {
-	return status.Errorf(codes.Unimplemented, "method Max not implemented")
+func (UnimplementedClipboardServiceServer) SendClipboard(ClipboardService_SendClipboardServer) error {
+	return status.Errorf(codes.Unimplemented, "method SendClipboard not implemented")
 }
-func (UnimplementedMathServer) mustEmbedUnimplementedMathServer() {}
+func (UnimplementedClipboardServiceServer) mustEmbedUnimplementedClipboardServiceServer() {}
 
-// UnsafeMathServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to MathServer will
+// UnsafeClipboardServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ClipboardServiceServer will
 // result in compilation errors.
-type UnsafeMathServer interface {
-	mustEmbedUnimplementedMathServer()
+type UnsafeClipboardServiceServer interface {
+	mustEmbedUnimplementedClipboardServiceServer()
 }
 
-func RegisterMathServer(s grpc.ServiceRegistrar, srv MathServer) {
-	s.RegisterService(&Math_ServiceDesc, srv)
+func RegisterClipboardServiceServer(s grpc.ServiceRegistrar, srv ClipboardServiceServer) {
+	s.RegisterService(&ClipboardService_ServiceDesc, srv)
 }
 
-func _Math_Max_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(MathServer).Max(&mathMaxServer{stream})
+func _ClipboardService_SendClipboard_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ClipboardServiceServer).SendClipboard(&clipboardServiceSendClipboardServer{stream})
 }
 
-type Math_MaxServer interface {
+type ClipboardService_SendClipboardServer interface {
 	Send(*Response) error
 	Recv() (*Request, error)
 	grpc.ServerStream
 }
 
-type mathMaxServer struct {
+type clipboardServiceSendClipboardServer struct {
 	grpc.ServerStream
 }
 
-func (x *mathMaxServer) Send(m *Response) error {
+func (x *clipboardServiceSendClipboardServer) Send(m *Response) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *mathMaxServer) Recv() (*Request, error) {
+func (x *clipboardServiceSendClipboardServer) Recv() (*Request, error) {
 	m := new(Request)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -118,17 +118,17 @@ func (x *mathMaxServer) Recv() (*Request, error) {
 	return m, nil
 }
 
-// Math_ServiceDesc is the grpc.ServiceDesc for Math service.
+// ClipboardService_ServiceDesc is the grpc.ServiceDesc for ClipboardService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Math_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "protobuf.Math",
-	HandlerType: (*MathServer)(nil),
+var ClipboardService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "protobuf.ClipboardService",
+	HandlerType: (*ClipboardServiceServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "Max",
-			Handler:       _Math_Max_Handler,
+			StreamName:    "SendClipboard",
+			Handler:       _ClipboardService_SendClipboard_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},

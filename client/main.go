@@ -73,13 +73,13 @@ func main() {
 			defer conn.Close()
 
 			// create stream
-			client := pb.NewMathClient(conn)
-			stream, err := client.Max(context.Background())
+			client := pb.NewClipboardServiceClient(conn)
+			stream, err := client.SendClipboard(context.Background())
 			if err != nil {
 				log.Fatalf("open stream error %v", err)
 			}
 
-			var max string
+			var clip string
 			ctx := stream.Context()
 			done := make(chan bool)
 
@@ -91,7 +91,7 @@ func main() {
 			go func() {
 				for data := range ch {
 					if !isRecieved {
-						req := pb.Request{String_: string(data), Group: c.String("group")}
+						req := pb.Request{Characters: string(data), Group: c.String("group")}
 						if err := stream.Send(&req); err != nil {
 							log.Printf("can not send %v\n", err)
 							continue
@@ -119,11 +119,11 @@ func main() {
 					if err != nil {
 						log.Fatalf("can not receive %v", err)
 					}
-					max = resp.String_
+					clip = resp.Characters
 					mutex.Lock()
 					isRecieved = true
 					mutex.Unlock()
-					cp.WriteAll(max)
+					cp.WriteAll(clip)
 				}
 			}()
 

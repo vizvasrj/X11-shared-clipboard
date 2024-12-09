@@ -4,16 +4,16 @@ package protobuf;
 
 option go_package = "src/proto";
 
-service Math {
-    rpc Max (stream Request) returns (stream Response) {}
+service ClipboardService {
+    rpc SendClipboard (stream Request) returns (stream Response) {}
 }
 
 message Request {
-    string string = 1;
+    string characters = 1;
     string group = 2;
 }
 
 message Response {
-    string string = 1;
+    string characters = 1;
     string group = 2;
 }
