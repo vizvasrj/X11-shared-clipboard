@@ -10,3 +10,7 @@ make server
 ./clip_client # for client
 ./clip_server # for server
 ```
+## if it wont copy and paste please install `xel` package
+```bash
+apt install xsel
+```
