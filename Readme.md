@@ -1,3 +1,11 @@
+## How to run
+- Build the Client and Server
+```bash
+make client
+make server
+```
+---
+
 ## Flags for gRPC Clipboard Server
 
 You can use the following flags when running the server:
